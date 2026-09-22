@@ -36,7 +36,6 @@ public class Ball {
      * @param ballGraphics - the Graphics object to represent the ball.
      */
     public void paint(Graphics ballGraphics){
-
         // Sets the color of the Graphics object to the instance variable ballColor
         ballGraphics.setColor(ballColor);
         // Creates an oval shape of the Graphics object at the coordinates assigned by the instance variables, 
@@ -63,6 +62,10 @@ public class Ball {
         ballCY = ballCY * -1;
     }
 
+    /**
+     * This method uses the random method of the Math class to assign the ball a random Y coordinate
+     * @return the random Y coordinate now assigned to the ball.
+     */
     public int randomYCoord(){
         int randomY = (int)(Math.random() * (PongGame.WINDOW_HEIGHT-50));
         return randomY;
@@ -83,9 +86,12 @@ public class Ball {
         } else if(ballY < top + (ballSize / 2)){
             reverseY();
         }
-
     }
 
+    /**
+     * A parent method to represent the effect the balls have on the paddles when they come into contact
+     * @param aPaddles - the Paddle object to apply the effects to
+     */
     public void ballEffect(Paddles aPaddles){
         
     }
@@ -156,26 +162,20 @@ public class Ball {
     }
 
     /**
-     * A setter method that sets the speed of the ball
-     * @param speed - the new speed that will be assigned to the ballSpeed variable
+     * Increases the speed of the ball by adding onto the existing speed.
+     * @param xSpeed - the x speed that should be added to the cX speed
+     * @param ySpeed - the Y speed that should be added to the cY speed
      */
-    public void setSpeedOLD(int speed){
-        ballSpeed = ballSpeed + speed;
-    }
-
-    public void decreaseSpeedOLD(int decrease){
-        ballSpeed = ballSpeed - decrease;
-    }
-
-    public void increaseSpeedOLD(int increase){
-        ballSpeed = ballSpeed + increase;
-    }
-
     public void setSpeed(int xSpeed, int ySpeed){
         ballCX = ballCX + xSpeed;
         ballCY = ballCY + ySpeed;
     }
 
+    /**
+     * Decreases the speed of the ball by subtracting from the existing speed.
+     * @param xDecrease - the integer to subtract from the current x speed
+     * @param yDecrease - the integer to subtract from the current y speed.
+     */
     public void decreaseSpeed(int xDecrease, int yDecrease){
         ballCX = ballCX - xDecrease;
         ballCY = ballCY - yDecrease;

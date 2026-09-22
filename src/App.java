@@ -6,10 +6,8 @@
 
  import java.awt.event.ActionEvent;
  import java.awt.event.ActionListener;
- 
- import javax.swing.*;
- 
- import javafx.embed.swing.JFXPanel;
+
+import javax.swing.*;
  
  
  public class App {
@@ -18,18 +16,7 @@
      static JFrame mainWindow = new JFrame("Pong 2: ULTIMATE XTREME BONUS EDITION 4");
      public static void main(String[] args) throws Exception {
  
-         final JFXPanel fxPanel = new JFXPanel();
- 
-         /*
-         String sound = "src/Sfx/wannaPlayPingPong.mp3";
-         try {
-             Media media = new Media(new File(sound).toURI().toString());
-             MediaPlayer mediaPlayer = new MediaPlayer(media);
-             mediaPlayer.play();
-         } catch (Exception exc) {
-             exc.printStackTrace();
-         }
-        */
+         //final JFXPanel fxPanel = new JFXPanel();
  
          // Sets the main window to close when user clicks the close button.
          mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -43,15 +30,6 @@
  
          // Sets the visibility of the window, whether the user can see it or not, to true, so the user can see the window.
          mainWindow.setVisible(true);
- 
-         /* 
-         try{
-             Thread.sleep(6000);
-         } catch(Exception exc){
-             exc.printStackTrace();
-         }
-        */
- 
  
          // Creates a Timer object called gameTimer that redraws the pong game screen every 33 milliseconds, about 30 times per second
          // This is so the screen can constantly update and use game logic to accurately display where all game objects are.

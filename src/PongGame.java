@@ -7,22 +7,20 @@
  * https://kevinsguides.com/guides/code/java/javaprojs/simple-pong-extras
  */
 
+import javax.sound.sampled.Clip;
 import javax.swing.JPanel;
 
 import java.awt.*;
-import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-
-import java.io.File;
-
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 
 public class PongGame extends JPanel implements MouseMotionListener{
     
     static final int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
+    private static final Clip pongBounceSound = Sound.createSoundClip("src/Sfx/pongbounce.wav");
+    private static final Clip losePointSound = Sound.createSoundClip("src/Sfx/losepoint.wav");
+    private static final Clip goalSound = Sound.createSoundClip("src/Sfx/goal.wav");
 
     private Ball gameBall;
     private Paddles userPaddle, comPaddle;
@@ -97,14 +95,14 @@ public class PongGame extends JPanel implements MouseMotionListener{
         // These if statements check if the ball has collided with either paddle
         // If so it makes the balls bounce off of the paddle, increasing the bounce count.
         if (userPaddle.checkCollision(gameBall) == true) {
-            playSound("src/Sfx/pongBounce.mp3");
+            Sound.playSoundClip(pongBounceSound);
             gameBall.reverseX();
             gameBall.setX(userPaddle.getX() + Paddles.PADDLE_WIDTH + 1); // This code fixes the bug that occurs when the ball hits the paddle at a 45 degree angle. From https://kevinsguides.com/guides/code/java/javaprojs/simple-pong-extras
             gameBall.ballEffect(userPaddle);
             bounceCount++;
         }
         if (comPaddle.checkCollision(gameBall) == true) {
-            playSound("src/Sfx/pongBounce.mp3");
+            Sound.playSoundClip(pongBounceSound);
             gameBall.reverseX();
             if (gameBall.getSize() != 40) {
                 gameBall.setX(comPaddle.getX() - (Paddles.PADDLE_WIDTH + 1)); // This code fixes the bug that occurs when the ball hits the paddle at a 45 degree angle. From https://kevinsguides.com/guides/code/java/javaprojs/simple-pong-extras
@@ -125,13 +123,13 @@ public class PongGame extends JPanel implements MouseMotionListener{
         /* These if statements check if the ball has gone off either the left or right ends of the screen */
         // if it goes off the left side of the screen, that means the computer has scored, increases comScore, and resets the screen
         if(gameBall.getX() < 0){
-            playSound("src/Sfx/LosePoint.mp3");
+            Sound.playSoundClip(losePointSound);
             comScore++;
             reset();
         } 
         // If it goes off of the right side of the screen, that means the player scored, increased userScore, and resets the screen.
         else if(gameBall.getX() > WINDOW_WIDTH){
-            playSound("src/Sfx/GOAL!.mp3");
+            Sound.playSoundClip(goalSound);
             userScore++;
             reset();
         }
@@ -151,8 +149,6 @@ public class PongGame extends JPanel implements MouseMotionListener{
         }
         gameBall.setX(960);
         gameBall.setY(540);
-        //gameBall.setCX(9);
-        //gameBall.setCY(9);
         userPaddle = new Paddles(300, 250, 400, 15, Color.MAGENTA); // creates a new Paddles object called userPaddle
         comPaddle = new Paddles(300, 1670, 400, 15, Color.PINK); // creates a new Paddles object called comPaddle
         bounceCount = 0;
@@ -172,39 +168,29 @@ public class PongGame extends JPanel implements MouseMotionListener{
      */
     public void powerUpLogic(){
         int chance;
-        chance = (int)(Math.random() * 12 + 1);
-        if(chance == 1 || chance == 2){
-            playSound("src/Sfx/freeze.mp3");
-            gameBall = new FreezeBall(960, 540, gameBall.getCX() / 2, gameBall.getCY() / 2, 8, 40, Color.BLUE);
-        } else if(chance == 3 || chance == 4){
-            playSound("src/Sfx/explosion.mp3");
-            gameBall = new FireBall(960, 540, gameBall.getCX() * 2, gameBall.getCY() *2, 65, 30, Color.RED);
-        } else if(chance >= 5 && chance <= 9){
-            gameBall = new Ball(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 35, Color.WHITE);
-        } else if(chance == 10){
-            playSound("src/Sfx/bombsAway.mp3");
-            gameBall = new NukeBall(960, 540, gameBall.getCX() + 3, gameBall.getCY() + 3, 20, 100, Color.DARK_GRAY);
-        } else if(chance == 11 || chance == 12){
-            gameBall = new TeleportBall(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 30, Color.ORANGE);
-        }
-    }
+        chance = (int)(Math.random() * 5 + 1);
 
-
-    /**
-     * This method is used to play a MP3 sound file.
-     * @param filePath - the String that contains the path to the MP3 file that will be played
-     */
-    public void playSound(String filePath) {
-        String sound = filePath;
-        try {
-            Media media = new Media(new File(sound).toURI().toString());
-            MediaPlayer mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.play();
-        } catch (Exception exc) {
-            exc.printStackTrace();
+        switch (chance) {
+            case 1:
+                gameBall = new FreezeBall(960, 540, gameBall.getCX() / 2, gameBall.getCY() / 2, 8, 40, Color.BLUE);
+                break;
+            case 2:
+                gameBall = new FireBall(960, 540, gameBall.getCX() * 2, gameBall.getCY() *2, 65, 30, Color.RED);
+                break;
+            case 3:
+                gameBall = new TeleportBall(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 30, Color.ORANGE);
+                break;
+            case 4:
+                gameBall = new NukeBall(960, 540, gameBall.getCX() + 3, gameBall.getCY() + 3, 20, 100, Color.DARK_GRAY);
+                break;
+            case 5:
+                gameBall = new Ball(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 35, Color.WHITE);
+                break;
+            default:
+                gameBall = new Ball(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 35, Color.WHITE);
+                break;
         }
-        
-    }  
+    } 
 
     /* These methods are to ensure the mouse tracking works for the program */
     @Override

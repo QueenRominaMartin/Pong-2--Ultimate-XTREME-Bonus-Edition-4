@@ -32,9 +32,11 @@ public class Paddles {
         paddleColor = color;
     }
 
-    /* this method paints the paddle on the screen */
+    /**
+     * This method paints the paddles on the screen.
+     * @param graphics - the graphics object to paint the paddles onto
+     */
     public void paint(Graphics graphics){
-
         // Paints the paddles on the Graphics object, with the color, position, width and height all being assigned from the instance variables
         graphics.setColor(paddleColor);
         graphics.fillRect(paddleX, paddleY, PADDLE_WIDTH, paddleHeight);
@@ -42,7 +44,7 @@ public class Paddles {
 
     /**
      * Moves the paddles towards the target Y position every frame
-     * @param moveToY - position that the paddle is centered on
+     * @param moveToY - centered position that the paddle should move towards
      */
     public void moveTowards(int moveToY){
 
@@ -104,6 +106,10 @@ public class Paddles {
         paddleColor = color;
     }
 
+    /**
+     * This method uses the random method of the Math class to assign a random position to the paddle
+     * @return the random Y position the paddle is now set to
+     */
     public int setRandomPosition(){
         int randomY = (int)(Math.random() * (PongGame.WINDOW_HEIGHT - paddleHeight));
         return randomY;
