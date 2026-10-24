@@ -4,8 +4,8 @@
  * with modifications by Romina Martin (@QueenRominaMartin on GitHub)
  */
 
- import java.awt.event.ActionEvent;
- import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
  
@@ -30,6 +30,7 @@ import javax.swing.*;
  
          // Sets the visibility of the window, whether the user can see it or not, to true, so the user can see the window.
          mainWindow.setVisible(true);
+         mainWindow.addKeyListener(new KeyboardListener());
  
          // Creates a Timer object called gameTimer that redraws the pong game screen every 33 milliseconds, about 30 times per second
          // This is so the screen can constantly update and use game logic to accurately display where all game objects are.

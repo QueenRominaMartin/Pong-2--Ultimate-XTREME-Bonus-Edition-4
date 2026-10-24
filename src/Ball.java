@@ -7,28 +7,28 @@
 import java.awt.*;
 
 public class Ball {
+
+    public static final int BASE_BALL_SPEED = 9;
     
     // Declaring all the needed instance variables for the Ball class
-    private int ballX, ballY, ballCX, ballCY, ballSize, ballSpeed;
+    private int ballX, ballY, ballCX, ballCY, ballSize;
     private Color ballColor;
 
     /**
      * The constructor for the Ball class. Sets all the instance variables for this class.
      * @param x - the starting x position of the ball
      * @param y - the starting y position of the ball
-     * @param cx - the change in X position of the ball per frame
-     * @param cy - the change in Y Position of the ball per frame
      * @param size - the size of the ball in pixels
      * @param color - the color of the ball
      */
-    public Ball(int x, int y, int cx, int cy, int speed, int size, Color color){
+    public Ball(int x, int y, int size, Color color){
         ballX = x;
         ballY = y;
-        ballCX = cx;
-        ballCY = cy;
-        ballSpeed = speed;
         ballSize = size;
         ballColor = color;
+
+        ballCX = BASE_BALL_SPEED;
+        ballCY = BASE_BALL_SPEED;
     }
 
     /**
@@ -89,76 +89,14 @@ public class Ball {
     }
 
     /**
-     * A parent method to represent the effect the balls have on the paddles when they come into contact
-     * @param aPaddles - the Paddle object to apply the effects to
+     * Resets the ball
+     * Intended for code use after a goal is scored
      */
-    public void ballEffect(Paddles aPaddles){
-        
-    }
-
-    /**
-     * A getter method that
-     * @return the current X position of the ball
-     */
-    public int getX(){
-        return ballX;
-    }
-
-    /**
-     * A getter method that
-     * @return the current Y position of the ball.
-     */
-    public int getY(){
-        return ballY;
-    }
-
-    public int getCX(){
-        return ballCX;
-    }
-
-    public int getCY(){
-        return ballCY;
-    }
-
-    public void setCX(int cx){
-        ballCX = cx;
-    }
-
-    public void setCY(int cy){
-        ballCY = cy;
-    }
-
-
-    /**
-     * A getter method that
-     * @return the current size of the ball
-     */
-    public int getSize(){
-        return ballSize;
-    }
-
-    /**
-     * A getter method that
-     * @return the current speed of the ball
-     */
-    public int getSpeed(){
-        return ballSpeed;
-    }
-
-    /**
-     * A setter method that sets the X position of the ball
-     * @param xPos - the new X Coordinate position that the ball will be set to.
-     */
-    public void setX(int xPos){
-        ballX = xPos;
-    }
-
-    /**
-     * A setter method that sets the Y position of the ball
-     * @param yPos - the new Y Coordinate position that the ball will be set to.
-     */
-    public void setY(int yPos){
-        ballY = yPos;
+    public void reset(){
+        ballX = 960;
+        ballY = 540;
+        ballCX = BASE_BALL_SPEED;
+        ballCY = BASE_BALL_SPEED;
     }
 
     /**
@@ -185,6 +123,51 @@ public class Ball {
         ballCX = ballCX + xIncrease;
         ballCY = ballCY + yIncrease;
     }
+
+    /**
+     * A parent method to represent the effect the balls have on the paddles when they come into contact
+     * @param aPaddles - the Paddle object to apply the effects to
+     */
+    public void ballEffect(Paddles aPaddles){
+        
+    }
+
+    public int getX(){
+        return ballX;
+    }
+
+    public int getY(){
+        return ballY;
+    }
+
+    public int getCX(){
+        return ballCX;
+    }
+
+    public int getCY(){
+        return ballCY;
+    }
+
+    public void setCX(int cx){
+        ballCX = cx;
+    }
+
+    public void setCY(int cy){
+        ballCY = cy;
+    }
+
+    public int getSize(){
+        return ballSize;
+    }
+
+    public void setX(int xPos){
+        ballX = xPos;
+    }
+
+    public void setY(int yPos){
+        ballY = yPos;
+    }
+
 
 
 }

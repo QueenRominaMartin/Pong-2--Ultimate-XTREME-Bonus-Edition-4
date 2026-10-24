@@ -1,3 +1,20 @@
+# VERSION 0.0.3 ( )
+Additions to the Gameplay loop such as ability to pause, as well as Quality of Life changes and updates.
+
+**Gameplay Changes** <br>
+* Added pausing. Press space to pause your game. 
+* Removed the "Nuke Ball". Was originally added as a joke but it's gone now as it's annoying.
+
+**Code Changes** <br>
+* Added a class named `KeyboardListener.java`, which tracks keyboard inputs.
+
+**QOL Code Changes** <br>
+* Added more comments to the `PongGame.java` file.
+* Got rid of redundancies in code, mostly with how the Ball class was set up.
+* General organization of code
+
+**Updated README**
+
 # VERSION 0.0.2 (September 21st, 2026)
 Quality of Life update along with some other changes to the game's code structure
 

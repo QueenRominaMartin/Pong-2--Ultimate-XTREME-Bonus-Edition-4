@@ -8,13 +8,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Paddles {
+
+    //Constant variable for the width of the paddle
+    static final int PADDLE_WIDTH = 30;
     
     // The instance variables for the Paddles class
     private int paddleHeight, paddleX, paddleY, paddleSpeed;
     private Color paddleColor;
-
-    //Constant variable for the width of the paddle
-    static final int PADDLE_WIDTH = 30;
 
     /**
      * The constructor for the Paddles class
@@ -88,11 +88,20 @@ public class Paddles {
         return paddleSpeed;
     }
 
+    /**
+     * Sets the X Position of the Paddle
+     * @param x - the x position to set the paddle to
+     */
     public void setPosition(int x){
         paddleX = x;
         paddleY = 400;
     }
 
+    /**
+     * Sets the X and Y positions of the Paddle
+     * @param x - the x position to set the paddle to
+     * @param y - the y position to set the paddle to
+     */
     public void setPosition(int x, int y){
         paddleX = x;
         paddleY = y;

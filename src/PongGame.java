@@ -16,37 +16,42 @@ import java.awt.event.MouseMotionListener;
 
 
 public class PongGame extends JPanel implements MouseMotionListener{
-    
     static final int WINDOW_WIDTH = 1920, WINDOW_HEIGHT = 1080;
+
+    //Sound Clips for Game
     private static final Clip pongBounceSound = Sound.createSoundClip("src/Sfx/pongbounce.wav");
     private static final Clip losePointSound = Sound.createSoundClip("src/Sfx/losepoint.wav");
     private static final Clip goalSound = Sound.createSoundClip("src/Sfx/goal.wav");
 
+    //Game Elements
     private Ball gameBall;
     private Paddles userPaddle, comPaddle;
+
+    //Game tracking variables
     private int userMouseY;
     private int userScore, comScore;
     private int bounceCount;
     private int turnCount;
+
+    private static boolean paused;
+
+    //Other Varaibles
     private final Font font;
 
-    /*
-     * Constructor for PongGame class that creates the gameball object
-     */
+
     public PongGame(){
-        gameBall = new Ball(960, 540, 9, 9, 16, 35, Color.WHITE); // creates a new Ball object
+        gameBall = new Ball(960, 540, 35, Color.WHITE); // creates a new Ball object
         userPaddle = new Paddles(300, 250, 400, 15, Color.MAGENTA); // creates a new Paddles object called userPaddle
         comPaddle = new Paddles(300, 1670, 400, 15, Color.PINK); // creates a new Paddles object called comPaddle
 
         userMouseY = 0;
         addMouseMotionListener(this);
-
         userScore = 0; comScore = 0;
-
         bounceCount = 0;
-
         // This variable represents how many turns have elapsed in the game. A turn is the playtime between scores
         turnCount = 0;
+
+        paused = false;
 
         font = new java.awt.Font("Comic Sans", java.awt.Font.BOLD, 60);
     }
@@ -62,7 +67,6 @@ public class PongGame extends JPanel implements MouseMotionListener{
         graphics.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
         graphics.setColor(Color.WHITE);
-
         graphics.setFont(font);
         graphics.drawString("SCORE - USER : " + userScore + "    COM : " + comScore, 520, 100);
 
@@ -72,66 +76,76 @@ public class PongGame extends JPanel implements MouseMotionListener{
         // Draws the paddles on the graphics object
         userPaddle.paint(graphics);
         comPaddle.paint(graphics);
+
+        if(paused == true) {
+            graphics.setColor(Color.WHITE);
+
+            graphics.fillRect(750, 250, 50, 500);
+
+            graphics.fillRect(1050, 250, 50, 500);
+        }
     }
 
     /**
-     * This method will be called once per frame to update the game with essential game logic
-     * i.e. moving the Ball and paddles, and keeping track of scores.
+     * Method that is called every 33 milliseconds and performs all the game logic from moving the elements on the screen
+     * to updating the scores and keeping track of if the game is paused or not.
      */
-    public void gameLogic(){
+    public void gameLogic() {
 
-        // Calls the moveBall method to move the ball on the screen
-        gameBall.moveBall();
+        if(paused == false) {
+            // Calls the moveBall method to move the ball on the screen
+            gameBall.moveBall();
 
-        // calls this method to check if the ball needs to bounce off of the edge of the screen
-        gameBall.bounceOffEdges(0, WINDOW_HEIGHT);
+            // calls this method to check if the ball needs to bounce off of the edge of the screen
+            gameBall.bounceOffEdges(0, WINDOW_HEIGHT);
 
-        // these methods move both the paddles
-        // the user paddle towards the Y position of the User's cursor
-        // the computer paddle towards the Y position of the ball.
-        userPaddle.moveTowards(userMouseY);
-        comPaddle.moveTowards(gameBall.getY());
+            // these methods move both the paddles
+            // the user paddle towards the Y position of the User's cursor
+            // the computer paddle towards the Y position of the ball.
+            userPaddle.moveTowards(userMouseY);
+            comPaddle.moveTowards(gameBall.getY());
 
-        // These if statements check if the ball has collided with either paddle
-        // If so it makes the balls bounce off of the paddle, increasing the bounce count.
-        if (userPaddle.checkCollision(gameBall) == true) {
-            Sound.playSoundClip(pongBounceSound);
-            gameBall.reverseX();
-            gameBall.setX(userPaddle.getX() + Paddles.PADDLE_WIDTH + 1); // This code fixes the bug that occurs when the ball hits the paddle at a 45 degree angle. From https://kevinsguides.com/guides/code/java/javaprojs/simple-pong-extras
-            gameBall.ballEffect(userPaddle);
-            bounceCount++;
-        }
-        if (comPaddle.checkCollision(gameBall) == true) {
-            Sound.playSoundClip(pongBounceSound);
-            gameBall.reverseX();
-            if (gameBall.getSize() != 40) {
-                gameBall.setX(comPaddle.getX() - (Paddles.PADDLE_WIDTH + 1)); // This code fixes the bug that occurs when the ball hits the paddle at a 45 degree angle. From https://kevinsguides.com/guides/code/java/javaprojs/simple-pong-extras
-            } else if(gameBall.getSize() == 40){
-                gameBall.setX(comPaddle.getX() - (Paddles.PADDLE_WIDTH + 6));
+            // These if statements check if the ball has collided with either paddle
+            // If so it makes the balls bounce off of the paddle, increasing the bounce count.
+            if (userPaddle.checkCollision(gameBall) == true) {
+                Sound.playSoundClip(pongBounceSound);
+                gameBall.reverseX();
+                gameBall.setX(userPaddle.getX() + Paddles.PADDLE_WIDTH + 1); // This code fixes the bug that occurs when the ball hits the paddle at a 45 degree angle. From https://kevinsguides.com/guides/code/java/javaprojs/simple-pong-extras
+                gameBall.ballEffect(userPaddle);
+                bounceCount++;
             }
-            gameBall.ballEffect(comPaddle);
-            bounceCount++;
-        }
+            if (comPaddle.checkCollision(gameBall) == true) {
+                Sound.playSoundClip(pongBounceSound);
+                gameBall.reverseX();
+                if (gameBall.getSize() != 40) {
+                    gameBall.setX(comPaddle.getX() - (Paddles.PADDLE_WIDTH + 1)); // This code fixes the bug that occurs when the ball hits the paddle at a 45 degree angle. From https://kevinsguides.com/guides/code/java/javaprojs/simple-pong-extras
+                } else if(gameBall.getSize() == 40){
+                    gameBall.setX(comPaddle.getX() - (Paddles.PADDLE_WIDTH + 6));
+                }
+                gameBall.ballEffect(comPaddle);
+                bounceCount++;
+            }
 
-        // If the number of times the the ball has bounced off the paddles reaches 5
-        // The count is reset, and the balls speed is increased via the method call
-        if(bounceCount == 6){
-            gameBall.setSpeed(gameBall.getCX() + 1, gameBall.getCY() + 1);
-            bounceCount = 0;
-        }
+            // If the number of times the the ball has bounced off the paddles reaches 4
+            // The count is reset, and the balls speed is increased via the method call
+            if(bounceCount == 4){
+                gameBall.setSpeed(gameBall.getCX() + 1, gameBall.getCY() + 1);
+                bounceCount = 0;
+            }
 
-        /* These if statements check if the ball has gone off either the left or right ends of the screen */
-        // if it goes off the left side of the screen, that means the computer has scored, increases comScore, and resets the screen
-        if(gameBall.getX() < 0){
-            Sound.playSoundClip(losePointSound);
-            comScore++;
-            reset();
-        } 
-        // If it goes off of the right side of the screen, that means the player scored, increased userScore, and resets the screen.
-        else if(gameBall.getX() > WINDOW_WIDTH){
-            Sound.playSoundClip(goalSound);
-            userScore++;
-            reset();
+            /* These if statements check if the ball has gone off either the left or right ends of the screen */
+            // if it goes off the left side of the screen, that means the computer has scored, increases comScore, and resets the screen
+            if(gameBall.getX() < 0){
+                Sound.playSoundClip(losePointSound);
+                comScore++;
+                reset();
+            } 
+            // If it goes off of the right side of the screen, that means the player scored, increased userScore, and resets the screen.
+            else if(gameBall.getX() > WINDOW_WIDTH){
+                Sound.playSoundClip(goalSound);
+                userScore++;
+                reset();
+            }
         }
 
     }
@@ -147,17 +161,15 @@ public class PongGame extends JPanel implements MouseMotionListener{
         } catch(Exception exc){
             exc.printStackTrace();
         }
-        gameBall.setX(960);
-        gameBall.setY(540);
+        gameBall.reset();
         userPaddle = new Paddles(300, 250, 400, 15, Color.MAGENTA); // creates a new Paddles object called userPaddle
         comPaddle = new Paddles(300, 1670, 400, 15, Color.PINK); // creates a new Paddles object called comPaddle
         bounceCount = 0;
         turnCount++;
-        if(turnCount > 3){
+        if(turnCount > 3 && ((turnCount - 2) / 3)%3 == 0){
             powerUpLogic();
         }
-        gameBall.setY(gameBall.randomYCoord());
-        
+        //gameBall.setY(gameBall.randomYCoord());
     }
 
     /**
@@ -167,30 +179,37 @@ public class PongGame extends JPanel implements MouseMotionListener{
      * or a regular ball
      */
     public void powerUpLogic(){
-        int chance;
-        chance = (int)(Math.random() * 5 + 1);
+        int chance = (int)(Math.random() * 5 + 1);
 
         switch (chance) {
             case 1:
-                gameBall = new FreezeBall(960, 540, gameBall.getCX() / 2, gameBall.getCY() / 2, 8, 40, Color.BLUE);
+                gameBall = new FreezeBall(960, 540, gameBall.getCX() / 2, gameBall.getCY() / 2, 8, 40);
                 break;
             case 2:
-                gameBall = new FireBall(960, 540, gameBall.getCX() * 2, gameBall.getCY() *2, 65, 30, Color.RED);
+                gameBall = new FireBall(960, 540, gameBall.getCX() * 2, gameBall.getCY() * 2, 65, 30);
                 break;
             case 3:
-                gameBall = new TeleportBall(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 30, Color.ORANGE);
+                gameBall = new TeleportBall(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 30);
                 break;
             case 4:
-                gameBall = new NukeBall(960, 540, gameBall.getCX() + 3, gameBall.getCY() + 3, 20, 100, Color.DARK_GRAY);
+                gameBall = new FireBall(960, 540, gameBall.getCX() + 3, gameBall.getCY() + 3, 20, 30);
                 break;
             case 5:
-                gameBall = new Ball(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 35, Color.WHITE);
+                gameBall = new Ball(960, 540, 35, Color.WHITE);
                 break;
             default:
-                gameBall = new Ball(960, 540, gameBall.getCX(), gameBall.getCY(), 16, 35, Color.WHITE);
+                gameBall = new Ball(960, 540, 35, Color.WHITE);
                 break;
         }
     } 
+
+    public static void togglePause() {
+        paused = !paused;
+    }
+
+    /*
+     * KEYBOARD TRACKING FUNCTIONS
+    */
 
     /* These methods are to ensure the mouse tracking works for the program */
     @Override
@@ -201,5 +220,6 @@ public class PongGame extends JPanel implements MouseMotionListener{
     public void mouseMoved(MouseEvent event){
         userMouseY = event.getY();
     }
+
 
 }
